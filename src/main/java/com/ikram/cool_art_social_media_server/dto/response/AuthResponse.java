@@ -8,5 +8,5 @@ import lombok.Data;
 public class AuthResponse {
     private Boolean status;
     private String username;
-    private String password;
+    private String message;
 }
