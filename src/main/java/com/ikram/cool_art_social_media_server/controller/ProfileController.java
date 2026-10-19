@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/user/profiles")
+@RequestMapping("/user/profile")
 @RequiredArgsConstructor
 @Slf4j
 public class ProfileController {

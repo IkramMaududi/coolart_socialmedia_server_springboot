@@ -32,7 +32,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())    // disable CSRF
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Preflight requests (OPTIONS) is allowed
-                    .requestMatchers("/user/login", "/user/register").permitAll()
+//                    .requestMatchers("/user/login", "/user/register").permitAll()
+                    // Tambahkan endpoint profile, artwork, dan game ke sini:
+                    .requestMatchers("/user/**", "/error").permitAll()
                     .anyRequest().authenticated()
             );
     return http.build();
