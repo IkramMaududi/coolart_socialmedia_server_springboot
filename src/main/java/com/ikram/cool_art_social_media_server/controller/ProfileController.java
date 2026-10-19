@@ -5,6 +5,7 @@ import com.ikram.cool_art_social_media_server.dto.response.ApiResponse;
 import com.ikram.cool_art_social_media_server.service.ProfileService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,12 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/profiles")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
+@Slf4j
 public class ProfileController {
 
     private final ProfileService profileService;
 
     @GetMapping
     public ApiResponse getProfile(@RequestHeader("username") String username) {
+        log.info("Incoming Request : GET /profiles for username: {}", username);
         return profileService.getProfile(username);
     }
 
@@ -27,6 +30,7 @@ public class ProfileController {
             @ModelAttribute ProfileRequest request,
             @RequestParam(value = "avatar", required = false) MultipartFile file
     ) {
+        log.info("Incoming Request : POST /profiles for username {}", username);
         return profileService.saveOrUpdateProfile(username, request, file);
     }
 }
