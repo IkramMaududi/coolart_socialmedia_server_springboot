@@ -2,11 +2,19 @@ package com.ikram.cool_art_social_media_server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -20,10 +28,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // to turn off CSRF because this is REST API
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // allow all request to pass through
-                );
-        return http.build();
+            .cors(Customizer.withDefaults()) // activate CORS
+            .csrf(csrf -> csrf.disable())    // disable CSRF
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Preflight requests (OPTIONS) is allowed
+                    .requestMatchers("/user/login", "/user/register").permitAll()
+                    .anyRequest().authenticated()
+            );
+    return http.build();
+    }
+
+    // Global CORS config for Custom Header problem (to allow header of username and game from front end)
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // allow front end react to allow everything
+        configuration.setAllowedOriginPatterns(List.of("*"));
+
+        // allow HTTP methods needed
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // allow all custom headers
+        configuration.setAllowedHeaders(Arrays.asList("username", "game", "Authorization", "Content-Type"));
+
+        // allow sending credentials for cookie or token later
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

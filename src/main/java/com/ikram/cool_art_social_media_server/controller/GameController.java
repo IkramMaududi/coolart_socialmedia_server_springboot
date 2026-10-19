@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/games")
-@CrossOrigin(origins = "*")
+@RequestMapping("/user/games")
 @RequiredArgsConstructor
 @Slf4j
 public class GameController {

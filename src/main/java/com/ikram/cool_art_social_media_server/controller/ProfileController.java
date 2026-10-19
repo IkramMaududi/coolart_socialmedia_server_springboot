@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/profiles")
-@CrossOrigin(origins = "*")
+@RequestMapping("/user/profiles")
 @RequiredArgsConstructor
 @Slf4j
 public class ProfileController {
@@ -20,7 +19,7 @@ public class ProfileController {
 
     @GetMapping
     public ApiResponse getProfile(@RequestHeader("username") String username) {
-        log.info("Incoming Request : GET /profiles for username: {}", username);
+        log.info("Incoming Request : GET /user/profiles for username: {}", username);
         return profileService.getProfile(username);
     }
 
@@ -30,7 +29,7 @@ public class ProfileController {
             @ModelAttribute ProfileRequest request,
             @RequestParam(value = "avatar", required = false) MultipartFile file
     ) {
-        log.info("Incoming Request : POST /profiles for username {}", username);
+        log.info("Incoming Request : POST /user/profiles for username {}", username);
         return profileService.saveOrUpdateProfile(username, request, file);
     }
 }

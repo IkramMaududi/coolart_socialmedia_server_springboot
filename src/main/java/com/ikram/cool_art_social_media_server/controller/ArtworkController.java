@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/artworks")
-@CrossOrigin(origins = "*")
+@RequestMapping("/user/artworks")
 @RequiredArgsConstructor
 @Slf4j
 public class ArtworkController {
@@ -24,14 +23,14 @@ public class ArtworkController {
             @ModelAttribute ArtworkRequest request,
             @RequestParam("image") MultipartFile file
     ) {
-        log.info("Incoming Request : POST /artworks & username: {} & file name: {} & Ukuran: {} bytes",
+        log.info("Incoming Request : POST /user/artworks & username: {} & file name: {} & Ukuran: {} bytes",
                 username, file.getOriginalFilename(), file.getSize());
         return artworkService.uploadArtwork(username, request, file);
     }
 
     @GetMapping
     public ApiResponse getArtworks(@RequestHeader("username") String username) {
-        log.info("Incoming Request : GET /artworks for username: {}", username);
+        log.info("Incoming Request : GET /user/artworks for username: {}", username);
         return artworkService.getArtworks(username);
     }
 }
