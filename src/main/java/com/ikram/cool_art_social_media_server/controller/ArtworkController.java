@@ -23,7 +23,7 @@ public class ArtworkController {
             @ModelAttribute ArtworkRequest request,
             @RequestParam("image") MultipartFile file
     ) {
-        log.info("Incoming Request : POST /user/artworks & username: {} & file name: {} & Ukuran: {} bytes",
+        log.info("Incoming Request : POST /user/artworks & username: {} & file name: {} & size: {} bytes",
                 username, file.getOriginalFilename(), file.getSize());
         return artworkService.uploadArtwork(username, request, file);
     }

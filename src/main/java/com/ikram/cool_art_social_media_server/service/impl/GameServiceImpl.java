@@ -1,6 +1,5 @@
 package com.ikram.cool_art_social_media_server.service.impl;
 
-import com.ikram.cool_art_social_media_server.dto.request.GameRequest;
 import com.ikram.cool_art_social_media_server.dto.response.ApiResponse;
 import com.ikram.cool_art_social_media_server.repository.GameRepository;
 import com.ikram.cool_art_social_media_server.service.GameService;
@@ -34,10 +33,17 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public ApiResponse saveGameResult(String username, String gameName, GameRequest request) {
+    public ApiResponse saveGameResult(String username, String gameName, Map<String, Object> payload) {
+        log.info("Raw data from frontend: [{}]", payload);
+
         try {
-            // request.getResult() is raw JSON from frontend
-            gameRepository.insertGameResult(username, gameName, request.getResult());
+            // create object mapper manually
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            String validJsonResult = mapper.writeValueAsString(payload);
+
+            log.info("Data JSON to be inserted to DB : [{}]", validJsonResult);
+
+            gameRepository.insertGameResult(username, gameName, validJsonResult);
 
             log.info("Managed to save game result {} for user: {}", gameName, username);
             return ApiResponse.builder().isSuccess(true).message("Game result successfully inserted").build();

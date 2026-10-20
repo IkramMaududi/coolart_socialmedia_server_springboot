@@ -1,12 +1,13 @@
 package com.ikram.cool_art_social_media_server.controller;
 
-import com.ikram.cool_art_social_media_server.dto.request.GameRequest;
 import com.ikram.cool_art_social_media_server.dto.response.ApiResponse;
 import com.ikram.cool_art_social_media_server.service.GameService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user/game")
@@ -26,9 +27,9 @@ public class GameController {
     public ApiResponse saveGame(
             @RequestHeader("username") String username,
             @RequestHeader("game") String gameName,
-            @RequestBody GameRequest request
+            @RequestBody Map<String, Object> payload
     ) {
         log.info("Saving result for of the game for username: {} & game: {}", username, gameName);
-        return gameService.saveGameResult(username, gameName, request);
+        return gameService.saveGameResult(username, gameName, payload);
     }
 }
