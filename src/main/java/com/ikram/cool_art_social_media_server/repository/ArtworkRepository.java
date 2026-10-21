@@ -28,4 +28,9 @@ public class ArtworkRepository {
         return jdbcTemplate.queryForList(sql, username);
     }
 
+    public int deleteArtwork(Long id, String username) {
+        String sql = "DELETE FROM imageart WHERE id = ? AND username = ?";
+        // jdbcTemplate.update will return the number of lines deleted
+        return jdbcTemplate.update(sql, id, username);
+    }
 }

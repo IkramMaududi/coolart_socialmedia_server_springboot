@@ -8,4 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ArtworkService {
     ApiResponse uploadArtwork(String username, ArtworkRequest request, MultipartFile file);
     ApiResponse getArtworks(String username);
+    ApiResponse deleteArtwork(Long id, String username);
 }

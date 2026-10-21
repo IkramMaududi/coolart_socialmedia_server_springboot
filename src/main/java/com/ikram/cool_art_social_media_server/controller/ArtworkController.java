@@ -23,14 +23,23 @@ public class ArtworkController {
             @ModelAttribute ArtworkRequest request,
             @RequestParam("image") MultipartFile file
     ) {
-        log.info("Incoming Request : POST /user/artworks & username: {} & file name: {} & size: {} bytes",
+        log.info("Incoming POST Request : /user/artwork & username: {} & file name: {} & size: {} bytes",
                 username, file.getOriginalFilename(), file.getSize());
         return artworkService.uploadArtwork(username, request, file);
     }
 
     @GetMapping
     public ApiResponse getArtworks(@RequestHeader("username") String username) {
-        log.info("Incoming Request : GET /user/artworks for username: {}", username);
+        log.info("Incoming GET Request : /user/artwork for username: {}", username);
         return artworkService.getArtworks(username);
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse deleteArtwork(
+            @RequestHeader("username") String username,
+            @PathVariable("id") Long id
+    ) {
+        log.info("Incoming DELETE Request : /user/artwork/{} for username {}", id, username);
+        return artworkService.deleteArtwork(id, username);
     }
 }

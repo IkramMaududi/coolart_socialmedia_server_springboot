@@ -61,4 +61,30 @@ public class ArtworkServiceImpl implements ArtworkService {
         log.info("No artwork found for user: {}", username);
         return ApiResponse.builder().exist(false).data(null).total(null).build();
     }
+
+    @Override
+    public ApiResponse deleteArtwork(Long id, String username) {
+        log.info("Trying to delete artwork with id: {} for user: {}", id, username);
+
+        try {
+            int rowsAffected = artworkRepository.deleteArtwork(id, username);
+
+            if (rowsAffected > 0) {
+                log.info("Artwork id {} is deleted.", id);
+                return ApiResponse.builder()
+                        .isSuccess(true)
+                        .message("Artwork successfully deleted")
+                        .build();
+            } else {
+                log.warn("Artwork id {} is not found or does not belong to {}", id, username);
+                return ApiResponse.builder()
+                        .isSuccess(false)
+                        .message("Artwork not found or you don't have permission to delete it")
+                        .build();
+            }
+        } catch (Exception e) {
+            log.error("Fail to delete artwork id {}. The cause is: {}", id, e.getMessage(), e);
+            throw new RuntimeException("Error deleting artwork: " + e.getMessage());
+        }
+    }
 }
