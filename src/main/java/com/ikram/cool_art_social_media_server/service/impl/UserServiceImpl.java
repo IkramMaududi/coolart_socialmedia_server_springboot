@@ -1,5 +1,6 @@
 package com.ikram.cool_art_social_media_server.service.impl;
 
+import com.ikram.cool_art_social_media_server.config.JwtUtils;
 import com.ikram.cool_art_social_media_server.dto.request.AuthRequest;
 import com.ikram.cool_art_social_media_server.dto.response.AuthResponse;
 import com.ikram.cool_art_social_media_server.repository.UserRepository;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -49,13 +51,17 @@ public class UserServiceImpl implements UserService {
             String dbPassword = (String) user.get("password");
             if (passwordEncoder.matches(request.getPassword(), dbPassword)) {
                 log.info("Login is success for user: {}", request.getUsername());
+
+                String token = jwtUtils.generateToken(request.getUsername());
+
                 return AuthResponse.builder()
                         .status(true)
                         .username(request.getUsername())
                         .message("Sign In Successful")
+                        .token(token)
                         .build();
             } else {
-                log.warn("Login failed: Password is wrong for user '{}'", request.getUsername());
+                log.warn("Login failed: Password is wrong for this user '{}'", request.getUsername());
                 return AuthResponse.builder()
                         .status(false)
                         .message("Wrong username/password combo!")

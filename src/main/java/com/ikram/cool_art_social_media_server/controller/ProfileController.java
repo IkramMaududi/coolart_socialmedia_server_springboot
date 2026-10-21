@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/user/profile")
 @RequiredArgsConstructor
@@ -18,17 +20,21 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping
-    public ApiResponse getProfile(@RequestHeader("username") String username) {
+    public ApiResponse getProfile(Principal principal) {
+        String username = principal.getName();
+
         log.info("Incoming Request : GET /user/profiles for username: {}", username);
         return profileService.getProfile(username);
     }
 
     @PostMapping
     public ApiResponse updateProfile(
-            @RequestHeader("username") String username,
+            Principal principal,
             @ModelAttribute ProfileRequest request,
             @RequestParam(value = "avatar", required = false) MultipartFile file
     ) {
+        String username = principal.getName();
+
         log.info("Incoming Request : POST /user/profiles for username {}", username);
         return profileService.saveOrUpdateProfile(username, request, file);
     }

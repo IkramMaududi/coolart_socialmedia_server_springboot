@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/user/artwork")
 @RequiredArgsConstructor
@@ -19,26 +21,32 @@ public class ArtworkController {
 
     @PostMapping
     public ApiResponse uploadArtwork(
-            @RequestHeader("username") String username,
+            Principal principal,
             @ModelAttribute ArtworkRequest request,
             @RequestParam("image") MultipartFile file
     ) {
+        String username = principal.getName();
+
         log.info("Incoming POST Request : /user/artwork & username: {} & file name: {} & size: {} bytes",
                 username, file.getOriginalFilename(), file.getSize());
         return artworkService.uploadArtwork(username, request, file);
     }
 
     @GetMapping
-    public ApiResponse getArtworks(@RequestHeader("username") String username) {
+    public ApiResponse getArtworks(Principal principal) {
+        String username = principal.getName();
+
         log.info("Incoming GET Request : /user/artwork for username: {}", username);
         return artworkService.getArtworks(username);
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse deleteArtwork(
-            @RequestHeader("username") String username,
+            Principal principal,
             @PathVariable("id") Long id
     ) {
+        String username = principal.getName();
+
         log.info("Incoming DELETE Request : /user/artwork/{} for username {}", id, username);
         return artworkService.deleteArtwork(id, username);
     }
